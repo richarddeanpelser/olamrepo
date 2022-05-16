@@ -1,0 +1,13 @@
+--- 
+  - name: Get all joined systems
+    delegate_to: localhost
+    run_once: true
+    command: > 
+      scripts/ol_manager/ol_manager.py
+      '{{ olm_username }}'
+      '{{ olm_password }}'
+      '{{ olm_url }}'
+      -l
+    register: registered_systems
+
+      

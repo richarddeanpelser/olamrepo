@@ -1,0 +1,24 @@
+plugin: community.vmware.vmware_vm_inventory
+strict: False
+hostname: "{{ VMWARE_HOST }}"
+username: "{{ VMWARE_USER }}"
+password: "{{ VMWARE_PASSWORD }}"
+validate_certs: False
+hostnames:
+- 'guest.hostName'
+- 'config.name'
+properties:
+- 'config.name'
+- 'config.guestId'
+- 'guest.hostName'
+- 'guest.ipAddress'
+- 'guest.guestFamily'
+- 'guest.guestFullName'
+- 'runtime.powerState'
+- 'customValue'
+
+
+filters:
+# - CustomFieldsManager.group == "test"
+- config.guestId == "oracleLinux7_64Guest"
+- runtime.powerState == "poweredOn"

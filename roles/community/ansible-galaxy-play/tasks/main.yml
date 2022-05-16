@@ -1,0 +1,12 @@
+---
+# tasks file for common community / galaxy role
+
+  - name: common community task place holder noop
+    meta: noop
+
+  - name: common community task place holder noop
+    meta: noop
+
+  - name: common community debug message hello world
+    debug: #
+      msg: "System {{ inventory_hostname }} says hello world"

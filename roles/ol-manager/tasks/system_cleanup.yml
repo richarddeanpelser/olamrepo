@@ -1,0 +1,44 @@
+---  
+  - name: Stop and disable PackageKit
+    ansible.builtin.systemd:
+      name: packagekit
+      state: stopped
+      enabled: no       
+    ignore_errors: yes 
+
+  - name: Remove PackageKit
+    yum:
+      name: >
+        PackageKit,
+        PackageKit-command-not-found,
+        PackageKit-glib,
+        PackageKit-gstreamer-plugin,
+        PackageKit-gtk3-module
+      state: absent
+      lock_timeout: 600
+    ignore_errors: yes       
+
+
+  - name: Clear yum cache
+    ansible.builtin.shell: /usr/bin/yum clean all
+    ignore_errors: yes
+
+  - name: Remove Spacewalk cert
+    ansible.builtin.shell: rpm -e rhn-org-trusted-ssl-cert-1.0-1
+    ignore_errors: yes
+
+  - name: Find existing yum repos
+    find:
+      paths: /etc/yum.repos.d/
+      patterns: "*.repo"
+    register: files_to_delete
+
+  - name: Remove existing yum repos
+    file:
+        path: "{{ item.path }}"
+        state: absent
+    with_items: "{{ files_to_delete.files }}"
+  
+  - name: Clear yum cache
+    ansible.builtin.shell: /usr/bin/yum clean all
+    ignore_errors: yes

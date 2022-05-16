@@ -1,0 +1,17 @@
+# This is your main playbook you will run with:
+# ansible-playbook site.yml
+# You can kick off everything from this playbook.
+# Or, you can create separate playbooks in this directory for specific orchestration events.
+
+---
+- name: site.yml apply common configuration to all nodes
+  hosts: all
+  user: root
+
+  roles:
+    - common
+    - community/ansible-galaxy-play
+
+# example of includeing play in subdirectory
+- name: Include a play after another play
+  import_playbook: plays/test-play.yml

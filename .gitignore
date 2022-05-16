@@ -1,0 +1,3 @@
+*.retry
+.vscode\*
+.vscode/settings.json

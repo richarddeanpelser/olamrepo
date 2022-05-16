@@ -1,0 +1,8 @@
+---
+# if systems need specific variables, put them here
+# this variables are set for the hostgroup local in you inventory files
+#
+
+# https://askubuntu.com/questions/87449/how-to-disable-strict-host-key-checking-in-ssh/385187#385187
+# if your local container changes afeter a rebuild you don't want it to complain
+ansible_ssh_common_args: ' -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o port=2022'

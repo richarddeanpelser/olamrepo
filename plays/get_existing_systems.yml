@@ -1,0 +1,25 @@
+--- 
+
+  - name: Get existing systems
+    hosts: localhost
+    gather_facts: no
+
+    vars:
+      - ansible_user: root
+      - ol_username: admin         
+      - ol_password: 5PyaCj2*I4@9
+      - ol_url: https://oracle-linux-manager01.kcloud.local/rpc/api
+
+    tasks:
+        - name: Get all joined systems
+          run_once: true
+          command: > 
+            scripts/ol_manager/ol_manager.py
+            'admin' 
+            '5PyaCj2*I4@9' 
+            'https://oracle-linux-manager01.kcloud.local/rpc/api' 
+            -l
+          register: joined_systems
+
+
+      

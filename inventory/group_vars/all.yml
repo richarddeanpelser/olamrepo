@@ -1,0 +1,6 @@
+---
+# yaml all group vars
+# https://github.com/luislavena/learn-ansible/blob/master/group_vars/all.yml
+
+ansible_python_interpreter: /usr/bin/python3
+

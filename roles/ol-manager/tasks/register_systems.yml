@@ -1,0 +1,77 @@
+--- 
+  - name: Install certificate from Oracle Linux Manager
+    ansible.builtin.shell: >
+      rpm -Uvh http://oracle-linux-manager01.kcloud.local/pub/rhn-org-trusted-ssl-cert-1.0-1.noarch.rpm  
+
+
+  # Check for RHN module to register client
+  - name: RHN - Register client to oracle linux manager
+    ansible.builtin.shell: >
+      rhnreg_ks --sslCACert=/usr/share/rhn/RHN-ORG-TRUSTED-SSL-CERT 
+      --serverUrl=https://oracle-linux-manager01.kcloud.local/XMLRPC 
+      --activationkey=1-oraclelinux7-x86_64 
+      --force 
+
+
+  # use copy module to copy script to correct location  
+  - name: RHN create script
+    ansible.builtin.shell: |              
+      echo "if ! pgrep -x "rhn_check" > /dev/null; then /usr/sbin/rhn_check;fi" > /usr/local/bin/gblco_rhn_check.sh 
+      chmod +x /usr/local/bin/gblco_rhn_check.sh
+
+
+  - name: Create cron job for RHN checker
+    ansible.builtin.cron:
+      name: gblco_rhn_check
+      minute: "*"
+      hour: "*"
+      day: "*"
+      weekday: "*"
+      month: "*"
+      user: root
+      job: "/usr/local/bin/gblco_rhn_check.sh"
+      state: present
+
+  # figure out what this does
+  - name: Prelink 
+    ansible.builtin.shell: prelink -au
+    ignore_errors: yes
+
+  #Change yum to package
+  - name: Yum remove prelink
+    yum:
+      name: prelink
+      state: absent
+      update_cache: True
+      lock_timeout: 600 
+
+
+  #Change yum to package
+  - name: Install Ksplice packages
+    yum:
+      name: ksplice-offline*,ksplice*,ksplice-updates-glibc,ksplice-updates-openssl 
+      state: present
+      update_cache: True
+      lock_timeout: 600
+
+
+  #Change yum to package
+  - name: Enable uptrack updates
+    ansible.builtin.shell: |
+      echo $'[Known-Exploit-Detection]\nenabled = yes' >> /etc/uptrack/uptrack.conf
+
+
+  #Change yum to package
+  - name: Install uptrack updates
+    ansible.builtin.shell: /usr/bin/yum install -y uptrack-updates-`uname -r`
+
+  - name: Clear yum cache
+    ansible.builtin.shell: /usr/bin/yum clean all
+
+
+  # Add additional check to play to make sure this can only run on supported systems
+  # Add supported systems list to variable maybe? Stop it from running instead of letting it fail first.    
+
+
+
+            

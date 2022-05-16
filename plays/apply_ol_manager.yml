@@ -1,0 +1,11 @@
+---
+# test play in a sub directory
+
+- name: Apply ol-manager configuration to all nodes
+  hosts: all
+  gather_facts: no
+  user: root
+  
+
+  roles:
+    - ol-manager

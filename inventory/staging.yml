@@ -1,0 +1,23 @@
+---
+# A place to put your stage hosts
+# Examples:
+all: # keys must be unique, i.e. only one 'hosts' per group
+  hosts:
+    test1:
+      var1: value1
+  children:   # key order does not matter, indentation does
+    local:
+      hosts:
+        127.0.0.1:
+    prod:
+      children:
+        webservers:
+          hosts:
+            app1:
+              ansible_host: 192.168.0.1
+            app2:
+              ansible_host: 192.168.0.2
+        dbservers:
+          hosts:
+            somedbhost:
+              ansible_host: 192.168.0.4
